@@ -185,7 +185,9 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
   _applyEmojiAutocomplete() {
     if (!this.siteSettings.enable_emoji) { return; }
 
-    const template = this.container.lookup('template:emoji-selector-autocomplete.raw');
+    const container = this.container;
+    const template = container.lookup('template:emoji-selector-autocomplete.raw');
+    const controller = this.get('controller');
 
     this.$('.wmd-input').autocomplete({
       template: template,
@@ -195,7 +197,13 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
         if (v.code) {
           return `${v.code}:`;
         } else {
-          showSelector({ skipPrefix: true });
+          showSelector({
+            container,
+            skipPrefix: true,
+            onSelect(title) {
+              controller.appendTextAtCursor(title + ':', {space: false});
+            }
+          });
           return "";
         }
       },
