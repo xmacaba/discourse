@@ -1,5 +1,7 @@
+/* global vdom */
+
 import loadScript from 'discourse/lib/load-script';
-import { default as property, on } from 'ember-addons/ember-computed-decorators';
+import { on, observes } from 'ember-addons/ember-computed-decorators';
 import { showSelector } from "discourse/lib/emoji/emoji-toolbar";
 
 // Our head can be a static string or a function that returns a string
@@ -21,17 +23,38 @@ export default Ember.Component.extend({
 
   @on('didInsertElement')
   _loadSanitizer() {
-    loadScript('defer/html-sanitizer-bundle').then(() => {
-      this.set('ready', true);
-    });
+    loadScript('defer/html-sanitizer-bundle').then(() => this.set('ready', true));
   },
 
-  @property('ready', 'value')
-  preview(ready, value) {
-    if (!ready) { return; }
+  @on('didInsertElement')
+  _initializePreview() {
+    this._previewTree = vdom.h('div', {class: 'd-editor-preview'});
+    this._previewRoot = vdom.create(this._previewTree);
+    this.$('.d-editor-container')[0].appendChild(this._previewRoot);
 
-    const text = Discourse.Dialect.cook(value || "", {});
-    return text ? text : "";
+    this._schedulePreviewUpdate();
+  },
+
+  _updatePreview() {
+    if (!this.get('ready')) { return; }
+
+    const value = this.get('value');
+    const html = Discourse.Dialect.cook(value || "", {});
+    const newTree = vdom.virtualize.fromHTML(`<div class='d-editor-preview'>${html}</div>`).children[1].children[0];
+
+    if (newTree.children.length === 0) {
+      newTree.properties.className = 'd-editor-preview hidden';
+    }
+
+    const patches = vdom.diff(this._previewTree, newTree);
+
+    this._previewRoot = vdom.patch(this._previewRoot, patches);
+    this._previewTree = newTree;
+  },
+
+  @observes('value', 'ready')
+  _schedulePreviewUpdate() {
+    Ember.run.scheduleOnce('afterRender', this, this._updatePreview);
   },
 
   _getSelected() {
