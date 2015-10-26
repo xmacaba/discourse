@@ -42,6 +42,7 @@ This command installs the latest versions of Docker and Git on your server. Alte
 Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd] into it, and make a copy of the config file as `app.yml`:
 
     mkdir /var/discourse
+    apt-get install git
     git clone https://github.com/discourse/discourse_docker.git /var/discourse
     cd /var/discourse
     cp samples/standalone.yml containers/app.yml
