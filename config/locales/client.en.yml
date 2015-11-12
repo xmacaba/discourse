@@ -2091,6 +2091,8 @@ en:
         color: "Color"
         opacity: "Opacity"
         copy: "Copy"
+        email_templates:
+          title: "Email Templates"
         css_html:
           title: "CSS/HTML"
           long_title: "CSS and HTML Customizations"

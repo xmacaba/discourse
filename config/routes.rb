@@ -158,6 +158,10 @@ Discourse::Application.routes.draw do
       resources :site_text_types, constraints: AdminConstraint.new
       resources :user_fields, constraints: AdminConstraint.new
       resources :emojis, constraints: AdminConstraint.new
+      resources :email_templates, constraints: AdminConstraint.new
+
+      match 'email_templates/(:id)' => 'email_templates#show', :constraints => { :id => /[0-9A-Za-z\-\.]+/ }, via: :get
+      match 'email_templates/(:id)' => 'email_templates#update', :constraints => { :id => /[0-9A-Za-z\-\.]+/ }, via: :put
     end
 
     resources :embeddable_hosts, constraints: AdminConstraint.new
