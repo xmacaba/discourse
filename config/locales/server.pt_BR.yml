@@ -1556,12 +1556,12 @@ pt_BR:
         (Se precisar se comunicar com um [membro interno](%{base_url}/about) como um novo usuário, só responder a esta mensagem.)
     signup:
       text_body_template: |
-        Ben-vindo ao %{site_name}!
+        Bem-vindo ao %{site_name}!
 
-        Clique no seguinte link para confirmar e aticar a sua nova conta:
+        Clique no seguinte link para confirmar e ativar a sua nova conta:
         %{base_url}/users/activate-account/%{email_token}
 
-        Se não conseguires clicar no link em cima, tenta copia-lo e cola-lo na barra de endereções do seu browser de internet.
+        Se não for possível clicar no link acima, tente copiá-lo e colá-lo na barra de endereços do seu navegador.
   page_not_found:
     title: "A página solicitada não existe ou é privativa."
     popular_topics: "Popular"
